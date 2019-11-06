@@ -512,13 +512,14 @@ data "aws_iam_policy_document" "es_vpc_management_access_base_overlay" {
   statement {
     actions = [
       "es:ESHttpGet",
+      "es:ESHttpHead",
       "es:ESHttpPost",
       "es:ESHttpPut"
     ]
 
     resources = [
       aws_elasticsearch_domain.es_vpc.arn,
-      "${aws_elasticsearch_domain.es_vpc.arn}/*",
+      "${aws_elasticsearch_domain.es_vpc.arn}/_bulk",
     ]
 
     principals {
