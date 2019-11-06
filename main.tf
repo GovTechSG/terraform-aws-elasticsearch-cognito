@@ -523,7 +523,7 @@ data "aws_iam_policy_document" "es_vpc_management_access_base_overlay" {
 
     principals {
       type        = "AWS"
-      identifiers = distinct(compact(flatten([var.log_pusher_iam_roles, aws_iam_role.log_pusher[0].arn])))
+      identifiers = distinct(compact(flatten([var.log_pusher_iam_roles, var.create_log_pusher_role ? aws_iam_role.log_pusher[0].arn : []])))
     }
   }
 }
