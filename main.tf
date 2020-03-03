@@ -409,6 +409,36 @@ resource "aws_cognito_identity_pool_roles_attachment" "main" {
   }
 }
 
+resource "aws_iam_user" "log-pusher" {
+  count                = var.create_access_keys ? 1 : 0
+  name                 = "${local.es_name}-log-pusher"
+  path                 = var.path
+  force_destroy        = var.force_destroy
+  permissions_boundary = var.permissions_boundary
+}
+
+resource "aws_iam_access_key" "log-pusher" {
+  count   = var.create_access_keys ? 1 : 0
+  user    = aws_iam_user.log-pusher[0].name
+  pgp_key = var.pgp_key
+}
+
+resource "aws_iam_group" "log-pusher" {
+  count = var.create_access_keys ? 1 : 0
+  name  = "${local.es_name}-log-pusher-group"
+}
+
+resource "aws_iam_group_membership" "log-pusher" {
+  count = var.create_access_keys ? 1 : 0
+  name  = "${local.es_name}-log-pusher-group"
+
+  users = [
+    aws_iam_user.log-pusher[0].name
+  ]
+
+  group = aws_iam_group.log-pusher[0].name
+}
+
 resource "aws_cognito_user_group" "developer" {
   count        = var.enable_cognito ? 1 : 0
   name         = "${local.es_name}-developer"
@@ -528,3 +558,4 @@ data "aws_iam_policy_document" "es_vpc_management_access_base_overlay" {
     }
   }
 }
+

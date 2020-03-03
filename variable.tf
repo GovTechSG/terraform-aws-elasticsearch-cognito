@@ -16,6 +16,12 @@ variable "create_iam_service_linked_role" {
   default     = true
 }
 
+variable "create_access_keys" {
+  description = "Boolean to enable creation of iam access keys for the iam users app and backup"
+  type        = bool
+  default     = true
+}
+
 variable "domain_name" {
   description = "Domain name for Elasticsearch cluster"
   type        = string
@@ -26,6 +32,24 @@ variable "es_version" {
   description = "Version of Elasticsearch to deploy (default 5.1)"
   type        = string
   default     = "5.1"
+}
+
+variable "force_destroy" {
+  description = "When destroying this user, destroy even if it has non-Terraform-managed IAM access keys, login profile or MFA devices. Without force_destroy a user with non-Terraform-managed access keys and login profile will fail to be destroyed."
+  type        = bool
+  default     = false
+}
+
+variable "path" {
+  description = "Desired path for the IAM user"
+  type        = string
+  default     = "/"
+}
+
+variable "pgp_key" {
+  description = "Either a base-64 encoded PGP public key, or a keybase username in the form keybase:username. Used to encrypt password and access key."
+  type        = string
+  default     = ""
 }
 
 variable "instance_type" {
