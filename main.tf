@@ -441,7 +441,7 @@ resource "aws_iam_group_membership" "log-pusher" {
 
 resource "aws_iam_group_policy" "log-pusher-group-policy" {
   name  = "${local.es_name}-log-pusher-group-policy"
-  group = aws_iam_group.log_pusher[0].id
+  group = aws_iam_group.log-pusher[0].id
 
   policy = <<EOF
 {
