@@ -456,7 +456,7 @@ resource "aws_iam_group_policy" "log-pusher-group-policy" {
       ],
       "Effect": "Allow",
       "Resource": [
-         ${aws_elasticsearch_domain.es_vpc.arn},
+        "${aws_elasticsearch_domain.es_vpc.arn}",
         "${aws_elasticsearch_domain.es_vpc.arn}/_bulk"
       ]
     }
