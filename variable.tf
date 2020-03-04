@@ -4,6 +4,26 @@ variable "additional_cidr_allow_443" {
   default     = []
 }
 
+output "app_iam_user_name" {
+  description = "ES log pusher user's name"
+  value       = aws_iam_user.log-pusher[0].name
+}
+
+output "app_iam_user_arn" {
+  description = "The ARN assigned by AWS for log pusher user"
+  value       = aws_iam_user.log-pusher[0].arn
+}
+
+output "app_iam_access_key_id" {
+  description = "The access key ID for log pusher"
+  value       = var.create_access_keys ? aws_iam_access_key.log-pusher[0].id : ""
+}
+
+output "app_iam_access_key_secret" {
+  description = "The access key secret for log pusher"
+  value       = var.create_access_keys ? aws_iam_access_key.log-pusher[0].encrypted_secret : 0
+}
+
 variable "num_availability_zones" {
   description = "Number of availability zones in which to deploy elasticsearch nodes"
   type        = number
