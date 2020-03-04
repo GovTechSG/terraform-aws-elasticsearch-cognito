@@ -439,36 +439,38 @@ resource "aws_iam_group_membership" "log-pusher" {
   group = aws_iam_group.log-pusher[0].name
 }
 
+resource "aws_iam_group_policy" "log-pusher-group-policy" {
+  name  = "${local.es_name}-log-pusher-group-policy"
+  group = aws_iam_group.log_pusher[0].id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "es:ESHttpGet",
+        "es:ESHttpHead",
+        "es:ESHttpPost",
+        "es:ESHttpPut"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+         ${aws_elasticsearch_domain.es_vpc.arn},
+        "${aws_elasticsearch_domain.es_vpc.arn}/_bulk"
+      ]
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_cognito_user_group" "developer" {
   count        = var.enable_cognito ? 1 : 0
   name         = "${local.es_name}-developer"
   user_pool_id = "${aws_cognito_user_pool.kibana[0].id}"
   precedence   = 2
   role_arn     = "${aws_iam_role.developer_authenticated[0].arn}"
-}
-
-resource "aws_security_group" "allow_443" {
-  name        = "${local.es_name}-allow-443"
-  description = "Allow port 443 traffic to and from VPC cidr range"
-  vpc_id      = var.vpc_id
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = flatten([[data.aws_vpc.vpc.cidr_block], var.additional_cidr_allow_443])
-  }
-
-  egress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = flatten([[data.aws_vpc.vpc.cidr_block], var.additional_cidr_allow_443])
-  }
-
-  tags = {
-    Name = "Allow 443 for ${local.es_name}"
-  }
 }
 
 resource "aws_iam_role" "log_pusher" {
@@ -559,3 +561,26 @@ data "aws_iam_policy_document" "es_vpc_management_access_base_overlay" {
   }
 }
 
+resource "aws_security_group" "allow_443" {
+  name        = "${local.es_name}-allow-443"
+  description = "Allow port 443 traffic to and from VPC cidr range"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = flatten([[data.aws_vpc.vpc.cidr_block], var.additional_cidr_allow_443])
+  }
+
+  egress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = flatten([[data.aws_vpc.vpc.cidr_block], var.additional_cidr_allow_443])
+  }
+
+  tags = {
+    "Name" = "Allow 443 for ${local.es_name}"
+  }
+}
