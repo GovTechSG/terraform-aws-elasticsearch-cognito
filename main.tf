@@ -11,7 +11,6 @@ locals {
 
 resource "aws_iam_service_linked_role" "es" {
   count            = var.create_iam_service_linked_role ? 1 : 0
-  custom_suffix    = local.es_name
   aws_service_name = "es.amazonaws.com"
 }
 
