@@ -219,3 +219,19 @@ variable "permissions_boundary" {
   type        = string
   default     = ""
 }
+
+variable "vpc_name" {
+  description = "Name of VPC"
+  type        = string
+  default     = ""
+}
+
+variable "project_name" {
+  type    = string
+  default = "es"
+}
+
+variable "environment" {
+  type    = string
+  default = "ci"
+}
