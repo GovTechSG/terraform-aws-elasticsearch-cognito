@@ -235,3 +235,21 @@ variable "environment" {
   type    = string
   default = "ci"
 }
+
+variable "warm_enabled" {
+  description = "Indicates whether to enable warm storage"
+  type        = bool
+  default     = false
+}
+
+variable "warm_count" {
+  description = "The number of warm nodes in the cluster. Valid values are between 2 and 150. warm_count can be only and must be set when warm_enabled is set to true"
+  type        = number
+  default     = 2
+}
+
+variable "warm_type" {
+  description = "The instance type for the Elasticsearch cluster's warm nodes. Valid values are ultrawarm1.medium.elasticsearch, ultrawarm1.large.elasticsearch"
+  type        = string
+  default     = "ultrawarm1.medium.elasticsearch"
+}

@@ -2,6 +2,10 @@ terraform {
   required_version = "~> 0.12.0"
 }
 
+provider "aws" {
+  version = "~> 2.67"
+}
+
 locals {
   es_name            = "${var.project_name}-${var.vpc_name}-${var.environment}-elasticsearch"
   identity_pool_name = "${replace(local.es_name, "-", " ")} kibana identity pool"
@@ -19,6 +23,10 @@ resource "aws_elasticsearch_domain" "es_vpc" {
 
   domain_name           = local.domain_name
   elasticsearch_version = var.es_version
+
+  warm_enabled = var.warm_enabled
+  warm_count   = var.warm_enabled ? var.warm_count : ""
+  warm_type    = var.warm_enabled ? var.warm_type : ""
 
   encrypt_at_rest {
     enabled    = var.encrypt_at_rest
