@@ -24,9 +24,6 @@ resource "aws_elasticsearch_domain" "es_vpc" {
   domain_name           = local.domain_name
   elasticsearch_version = var.es_version
 
-  warm_enabled = var.warm_enabled
-  warm_count   = var.warm_enabled ? var.warm_count : ""
-  warm_type    = var.warm_enabled ? var.warm_type : ""
 
   encrypt_at_rest {
     enabled    = var.encrypt_at_rest
@@ -43,6 +40,10 @@ resource "aws_elasticsearch_domain" "es_vpc" {
     zone_awareness_config {
       availability_zone_count = var.num_availability_zones
     }
+
+    warm_enabled = var.warm_enabled
+    warm_count   = var.warm_enabled ? var.warm_count : ""
+    warm_type    = var.warm_enabled ? var.warm_type : ""
   }
 
   advanced_options = var.advanced_options
