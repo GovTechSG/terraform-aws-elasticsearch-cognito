@@ -209,6 +209,7 @@ variable "node_to_node_encryption_enabled" {
   default     = false
 }
 
+
 variable "vpc_id" {
   description = "VPC ID to import vpc data for use with AWS Elasticsearch"
   type        = string
@@ -252,4 +253,10 @@ variable "warm_type" {
   description = "The instance type for the Elasticsearch cluster's warm nodes. Valid values are ultrawarm1.medium.elasticsearch, ultrawarm1.large.elasticsearch"
   type        = string
   default     = "ultrawarm1.medium.elasticsearch"
+}
+
+variable "worker_node_role" {
+  description = "If you will like eks nodes to assume this role, input the worker node role ARN to allow it to assume the log pusher role"
+  type        = string
+  default     = ""
 }

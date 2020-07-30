@@ -478,25 +478,36 @@ resource "aws_cognito_user_group" "developer" {
   role_arn     = "${aws_iam_role.developer_authenticated[0].arn}"
 }
 
+data "aws_iam_policy_document" "ec2_base_assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "ec2_overlay_assume_role" {
+  count       = var.worker_node_role ? 1 : 0
+  source_json = data.aws_iam_policy_document.ec2_base_assume_role
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = [var.worker_node_role]
+    }
+  }
+}
+
 resource "aws_iam_role" "log_pusher" {
   count = var.create_log_pusher_role ? 1 : 0
   name  = "${local.es_name}-log-pusher"
 
   permissions_boundary = var.permissions_boundary
-  assume_role_policy   = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "es.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
+  assume_role_policy   = var.worker_node_role ? data.aws_iam_policy_document.ec2_overlay_assume_role : data.aws_iam_policy_document.ec2_base_assume_role
 }
 
 data "aws_vpc" "vpc" {
