@@ -109,8 +109,8 @@ data "aws_iam_policy" "amazon_es_cognito_access" {
 
 resource "aws_iam_role_policy_attachment" "es_cognito_access" {
   count      = var.enable_cognito ? 1 : 0
-  role       = "${aws_iam_role.es_assume_role[0].name}"
-  policy_arn = "${data.aws_iam_policy.amazon_es_cognito_access.arn}"
+  role       = aws_iam_role.es_assume_role[0].name
+  policy_arn = data.aws_iam_policy.amazon_es_cognito_access.arn
 }
 
 resource "aws_iam_role" "es_assume_role" {
@@ -157,7 +157,7 @@ resource "aws_cognito_user_pool" "kibana" {
 resource "aws_cognito_user_pool_domain" "kibana" {
   count        = var.enable_cognito ? 1 : 0
   domain       = local.es_name
-  user_pool_id = "${aws_cognito_user_pool.kibana[0].id}"
+  user_pool_id = aws_cognito_user_pool.kibana[0].id
 }
 
 
@@ -227,8 +227,8 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "authenticated_attachment" {
-  role       = "${aws_iam_role.authenticated[0].name}"
-  policy_arn = "${aws_iam_policy.authenticated[0].arn}"
+  role       = aws_iam_role.authenticated[0].name
+  policy_arn = aws_iam_policy.authenticated[0].arn
 }
 
 resource "aws_iam_role" "unauthenticated" {
@@ -263,7 +263,7 @@ EOF
 resource "aws_iam_role_policy" "unauthenticated" {
   count = var.enable_cognito ? 1 : 0
   name  = "${local.es_name}UnauthenticatedPolicy"
-  role  = "${aws_iam_role.unauthenticated[0].id}"
+  role  = aws_iam_role.unauthenticated[0].id
 
   policy = <<EOF
 {
@@ -309,7 +309,7 @@ EOF
 resource "aws_iam_role_policy" "developer_authenticated" {
   count = var.enable_cognito ? 1 : 0
   name  = "${local.es_name}DeveloperAuthenticatedPolicy"
-  role  = "${aws_iam_role.developer_authenticated[0].id}"
+  role  = aws_iam_role.developer_authenticated[0].id
 
   policy = <<EOF
 {
@@ -334,8 +334,8 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "developer_attachment" {
   count      = var.enable_cognito ? 1 : 0
-  role       = "${aws_iam_role.developer_authenticated[0].name}"
-  policy_arn = "${aws_iam_policy.authenticated[0].arn}"
+  role       = aws_iam_role.developer_authenticated[0].name
+  policy_arn = aws_iam_policy.authenticated[0].arn
 }
 
 resource "aws_iam_role" "admin_authenticated" {
@@ -363,7 +363,7 @@ EOF
 resource "aws_iam_role_policy" "admin_authenticated" {
   count = var.enable_cognito ? 1 : 0
   name  = "${local.es_name}AdminAuthenticatedPolicy"
-  role  = "${aws_iam_role.admin_authenticated[0].id}"
+  role  = aws_iam_role.admin_authenticated[0].id
 
   policy = <<EOF
 {
@@ -386,22 +386,22 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "admin_attachment" {
   count      = var.enable_cognito ? 1 : 0
-  role       = "${aws_iam_role.admin_authenticated[0].name}"
-  policy_arn = "${aws_iam_policy.authenticated[0].arn}"
+  role       = aws_iam_role.admin_authenticated[0].name
+  policy_arn = aws_iam_policy.authenticated[0].arn
 }
 
 
 resource "aws_cognito_user_group" "admin" {
   count        = var.enable_cognito ? 1 : 0
   name         = "${local.es_name}-admin"
-  user_pool_id = "${aws_cognito_user_pool.kibana[0].id}"
+  user_pool_id = aws_cognito_user_pool.kibana[0].id
   precedence   = 1
-  role_arn     = "${aws_iam_role.admin_authenticated[0].arn}"
+  role_arn     = aws_iam_role.admin_authenticated[0].arn
 }
 
 resource "aws_cognito_identity_pool_roles_attachment" "main" {
   count            = var.enable_cognito ? 1 : 0
-  identity_pool_id = "${aws_cognito_identity_pool.kibana[0].id}"
+  identity_pool_id = aws_cognito_identity_pool.kibana[0].id
 
   roles = {
     "authenticated"   = aws_iam_role.authenticated[0].arn,
@@ -409,7 +409,7 @@ resource "aws_cognito_identity_pool_roles_attachment" "main" {
   }
   lifecycle {
     ignore_changes = [
-      "role_mapping"
+      role_mapping
     ]
   }
 }
@@ -473,9 +473,9 @@ EOF
 resource "aws_cognito_user_group" "developer" {
   count        = var.enable_cognito ? 1 : 0
   name         = "${local.es_name}-developer"
-  user_pool_id = "${aws_cognito_user_pool.kibana[0].id}"
+  user_pool_id = aws_cognito_user_pool.kibana[0].id
   precedence   = 2
-  role_arn     = "${aws_iam_role.developer_authenticated[0].arn}"
+  role_arn     = aws_iam_role.developer_authenticated[0].arn
 }
 
 data "aws_iam_policy_document" "ec2_base_assume_role" {
