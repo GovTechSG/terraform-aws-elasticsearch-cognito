@@ -490,8 +490,8 @@ data "aws_iam_policy_document" "ec2_base_assume_role" {
 }
 
 data "aws_iam_policy_document" "ec2_overlay_assume_role" {
-  count       = var.worker_node_role ? 1 : 0
-  source_json = data.aws_iam_policy_document.ec2_base_assume_role
+  count       = length(var.worker_node_role) > 0 ? 1 : 0
+  source_json = data.aws_iam_policy_document.ec2_base_assume_role.json
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -507,7 +507,7 @@ resource "aws_iam_role" "log_pusher" {
   name  = "${local.es_name}-log-pusher"
 
   permissions_boundary = var.permissions_boundary
-  assume_role_policy   = var.worker_node_role ? data.aws_iam_policy_document.ec2_overlay_assume_role : data.aws_iam_policy_document.ec2_base_assume_role
+  assume_role_policy   = length(var.worker_node_role) > 0 ? data.aws_iam_policy_document.ec2_overlay_assume_role[0].json : data.aws_iam_policy_document.ec2_base_assume_role.json
 }
 
 data "aws_vpc" "vpc" {
@@ -572,7 +572,7 @@ data "aws_iam_policy_document" "es_vpc_management_access_base_overlay" {
 
     principals {
       type        = "AWS"
-      identifiers = distinct(compact(flatten([var.log_pusher_iam_roles, var.create_log_pusher_role ? aws_iam_role.log_pusher[0].arn : ""])))
+      identifiers = distinct(compact(flatten([var.log_pusher_iam_roles, var.create_log_pusher_role ? length(aws_iam_role.log_pusher) > 0 ? aws_iam_role.log_pusher[0].arn : ""  : ""])))
     }
   }
 }

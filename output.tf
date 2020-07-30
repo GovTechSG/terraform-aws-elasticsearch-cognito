@@ -40,5 +40,5 @@ output "USER_POOL_NAME" {
 
 output "log_pusher_arn" {
   description = "ARN of iam role that is allowed to send logs to elasticsearch"
-  value       = aws_iam_role.log_pusher[0].arn
+  value       = var.create_log_pusher_role ? length(aws_iam_role.log_pusher) > 0 ? aws_iam_role.log_pusher[0].arn : "" : ""
 }
