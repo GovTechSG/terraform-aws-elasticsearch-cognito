@@ -496,7 +496,7 @@ data "aws_iam_policy_document" "ec2_overlay_assume_role" {
     actions = ["sts:AssumeRole"]
 
     principals {
-      type        = "Service"
+      type        = "AWS"
       identifiers = [var.worker_node_role]
     }
   }
