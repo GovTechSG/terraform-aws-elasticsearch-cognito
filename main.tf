@@ -512,7 +512,7 @@ resource "aws_iam_role" "log_pusher" {
 
 resource "aws_iam_role_policy_attachment" "log_pusher_cloudwatch_attach" {
   count = length(var.log_pusher_additional_policy) > 0 ? 1 : 0
-  role       = aws_iam_role.log_pusher.name
+  role       = aws_iam_role.log_pusher[0].name
   policy_arn = var.log_pusher_additional_policy
 }
 
