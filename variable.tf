@@ -260,3 +260,9 @@ variable "worker_node_role" {
   type        = string
   default     = ""
 }
+
+variable "log_pusher_additional_policy" {
+  description = "Additional policy ARN for log pusher role"
+  type        = string
+  default     = ""
+}
