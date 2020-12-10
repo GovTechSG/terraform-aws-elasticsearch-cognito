@@ -1,7 +1,3 @@
-terraform {
-  required_version = "~> 0.13.0"
-}
-
 locals {
   es_name            = "${var.project_name}-${var.vpc_name}-${var.environment}-elasticsearch"
   identity_pool_name = "${replace(local.es_name, "-", " ")} kibana identity pool"
