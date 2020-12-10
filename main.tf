@@ -34,7 +34,7 @@ resource "aws_elasticsearch_domain" "es_vpc" {
     }
 
     warm_enabled = var.warm_enabled
-    warm_count   = var.warm_enabled ? var.warm_count : ""
+    warm_count   = var.warm_enabled ? var.warm_count : 0
     warm_type    = var.warm_enabled ? var.warm_type : ""
   }
 
