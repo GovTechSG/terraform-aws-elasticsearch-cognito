@@ -223,6 +223,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "authenticated_attachment" {
+  count      = var.enable_cognito ? 1 : 0
   role       = aws_iam_role.authenticated[0].name
   policy_arn = aws_iam_policy.authenticated[0].arn
 }
@@ -441,6 +442,7 @@ resource "aws_iam_group_membership" "log-pusher" {
 }
 
 resource "aws_iam_group_policy" "log-pusher-group-policy" {
+  count = var.create_access_keys ? 1 : 0
   name  = "${local.es_name}-log-pusher-group-policy"
   group = aws_iam_group.log-pusher[0].id
 
@@ -507,7 +509,7 @@ resource "aws_iam_role" "log_pusher" {
 }
 
 resource "aws_iam_role_policy_attachment" "log_pusher_cloudwatch_attach" {
-  count = length(var.log_pusher_additional_policy) > 0 ? 1 : 0
+  count      = length(var.log_pusher_additional_policy) > 0 ? 1 : 0
   role       = aws_iam_role.log_pusher[0].name
   policy_arn = var.log_pusher_additional_policy
 }

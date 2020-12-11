@@ -42,3 +42,23 @@ output "log_pusher_arn" {
   description = "ARN of iam role that is allowed to send logs to elasticsearch"
   value       = var.create_log_pusher_role ? length(aws_iam_role.log_pusher) > 0 ? aws_iam_role.log_pusher[0].arn : "" : ""
 }
+
+output "app_iam_user_name" {
+  description = "ES log pusher user's name"
+  value       = var.create_access_keys ? aws_iam_user.log-pusher[0].name : ""
+}
+
+output "app_iam_user_arn" {
+  description = "The ARN assigned by AWS for log pusher user"
+  value       = var.create_access_keys ? aws_iam_user.log-pusher[0].arn : ""
+}
+
+output "app_iam_access_key_id" {
+  description = "The access key ID for log pusher"
+  value       = var.create_access_keys ? aws_iam_access_key.log-pusher[0].id : ""
+}
+
+output "app_iam_access_key_secret" {
+  description = "The access key secret for log pusher"
+  value       = var.create_access_keys ? aws_iam_access_key.log-pusher[0].encrypted_secret : 0
+}
