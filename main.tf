@@ -1,5 +1,5 @@
 locals {
-  es_name            = "${var.project_name}-${var.vpc_name}-${var.environment}-elasticsearch"
+  es_name            = "${var.project_name}-${var.environment}-elasticsearch"
   identity_pool_name = "${replace(local.es_name, "-", " ")} kibana identity pool"
   domain_prefix      = "${var.project_name}-${var.environment}-"
   domain_name        = var.use_prefix ? join("", [local.domain_prefix, var.domain_name]) : var.domain_name
