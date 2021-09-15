@@ -97,6 +97,8 @@ resource "aws_kms_key" "kms" {
   count                   = var.encrypt_at_rest ? 1 : 0
   description             = "KMS key for ${local.es_name}"
   deletion_window_in_days = 10
+
+  enable_key_rotation = true
 }
 
 data "aws_iam_policy" "amazon_es_cognito_access" {
