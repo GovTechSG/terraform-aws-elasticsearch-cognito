@@ -16,6 +16,11 @@ resource "aws_elasticsearch_domain" "es_vpc" {
   domain_name           = local.domain_name
   elasticsearch_version = var.es_version
 
+  domain_endpoint_options {
+    enforce_https       = true
+    tls_security_policy = "Policy-Min-TLS-1-2-2019-07"
+  }
+
 
   encrypt_at_rest {
     enabled    = var.encrypt_at_rest
