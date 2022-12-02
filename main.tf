@@ -154,6 +154,12 @@ resource "aws_cognito_user_pool" "kibana" {
   lifecycle {
     ignore_changes = all
   }
+
+  mfa_configuration = "ON"
+
+  software_token_mfa_configuration {
+    enabled = true
+  }
 }
 
 // set user pool domain
@@ -161,6 +167,7 @@ resource "aws_cognito_user_pool_domain" "kibana" {
   count        = var.enable_cognito ? 1 : 0
   domain       = local.es_name
   user_pool_id = aws_cognito_user_pool.kibana[0].id
+
 }
 
 
