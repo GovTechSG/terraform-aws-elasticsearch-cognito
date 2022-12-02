@@ -16,6 +16,11 @@ resource "aws_elasticsearch_domain" "es_vpc" {
   domain_name           = local.domain_name
   elasticsearch_version = var.es_version
 
+  domain_endpoint_options {
+    enforce_https       = true
+    tls_security_policy = "Policy-Min-TLS-1-2-2019-07"
+  }
+
 
   encrypt_at_rest {
     enabled    = var.encrypt_at_rest
@@ -140,14 +145,23 @@ resource "aws_cognito_user_pool" "kibana" {
     allow_admin_create_user_only = false
   }
   schema {
-    attribute_data_type = "String"
-    name                = "email"
-    required            = true
+    attribute_data_type      = "String"
+    name                     = "email"
+    mutable                  = false
+    developer_only_attribute = false
+    required                 = true
+
+    string_attribute_constraints {
+      max_length = "2048"
+      min_length = "0"
+    }
   }
   alias_attributes = ["email"]
 
-  lifecycle {
-    ignore_changes = all
+  mfa_configuration = "ON"
+
+  software_token_mfa_configuration {
+    enabled = true
   }
 }
 
@@ -156,6 +170,7 @@ resource "aws_cognito_user_pool_domain" "kibana" {
   count        = var.enable_cognito ? 1 : 0
   domain       = local.es_name
   user_pool_id = aws_cognito_user_pool.kibana[0].id
+
 }
 
 
