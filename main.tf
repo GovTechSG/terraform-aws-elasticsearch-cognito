@@ -145,15 +145,18 @@ resource "aws_cognito_user_pool" "kibana" {
     allow_admin_create_user_only = false
   }
   schema {
-    attribute_data_type = "String"
-    name                = "email"
-    required            = true
+    attribute_data_type      = "String"
+    name                     = "email"
+    mutable                  = false
+    developer_only_attribute = false
+    required                 = true
+
+    string_attribute_constraints {
+      max_length = "2048"
+      min_length = "0"
+    }
   }
   alias_attributes = ["email"]
-
-  lifecycle {
-    ignore_changes = all
-  }
 
   mfa_configuration = "ON"
 
