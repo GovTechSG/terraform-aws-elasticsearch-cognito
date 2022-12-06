@@ -142,8 +142,9 @@ resource "aws_cognito_user_pool" "kibana" {
   name                     = "${local.es_name}-kibana-user-pool"
   auto_verified_attributes = ["email"]
   admin_create_user_config {
-    allow_admin_create_user_only = false
+    allow_admin_create_user_only = var.admin_create_user_only
   }
+  
   schema {
     attribute_data_type      = "String"
     name                     = "email"
