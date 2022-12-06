@@ -164,12 +164,6 @@ resource "aws_cognito_user_pool" "kibana" {
   software_token_mfa_configuration {
     enabled = true
   }
-
-  mfa_configuration = "ON"
-
-  software_token_mfa_configuration {
-    enabled = true
-  }
 }
 
 // set user pool domain
