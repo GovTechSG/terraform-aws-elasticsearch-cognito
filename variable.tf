@@ -246,3 +246,9 @@ variable "log_pusher_additional_policy" {
   type        = string
   default     = ""
 }
+
+variable "admin_create_user_only" {
+  description = "Only admin can create user (disables the sign up button)"
+  type        = bool
+  default     = true
+}
